@@ -1,3 +1,5 @@
+import { createNewNote, getAll, updateNote } from '../services/notes'
+
 export const noteReducer = (state = [], action) => {
   if (action.type === '@notes/init') {
     return action.payload
@@ -6,14 +8,11 @@ export const noteReducer = (state = [], action) => {
     return [...state, action.payload]
   }
   if (action.type === '@notes/toogle_important') {
-    const { id } = action.payload
+    const updatedNote = action.payload
 
     return state.map((note) => {
-      if (note.id === id) {
-        return {
-          ...note,
-          important: !note.important
-        }
+      if (note.id === updatedNote.id) {
+        return { ...updatedNote }
       }
       return note
     })
@@ -21,29 +20,32 @@ export const noteReducer = (state = [], action) => {
   return state
 }
 
-const generateId = () => Math.floor(Math.random() * 9999999) + 1
-
 export const createNote = (content) => {
-  return {
-    type: '@notes/created',
-    payload: {
-      content,
-      important: false,
-      id: generateId()
-    }
+  return async (dispatch) => {
+    const note = await createNewNote(content)
+    return dispatch({
+      type: '@notes/created',
+      payload: note
+    })
   }
 }
 
-export const toggleImportantId = (id) => {
-  return {
-    type: '@notes/toogle_important',
-    payload: { id }
+export const toggleImportantOf = ({ id, important }) => {
+  return async (dispatch) => {
+    const note = await updateNote({ id, important })
+    return dispatch({
+      type: '@notes/toogle_important',
+      payload: note
+    })
   }
 }
 
-export const initNotes = (notes) => {
-  return {
-    type: '@notes/init',
-    payload: notes
+export const initNotes = () => {
+  return async (dispatch) => {
+    const notes = await getAll()
+    dispatch({
+      type: '@notes/init',
+      payload: notes
+    })
   }
 }

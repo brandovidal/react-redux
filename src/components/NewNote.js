@@ -5,7 +5,7 @@ import { createNote } from '../reducer/noteReducer'
 export default function NewNote() {
   const dispatch = useDispatch()
 
-  const addNote = (evt) => {
+  const addNote = async (evt) => {
     evt.preventDefault()
 
     const { target } = evt

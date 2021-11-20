@@ -1,12 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux'
 
-import { toggleImportantId } from '../reducer/noteReducer'
+import { toggleImportantOf } from '../reducer/noteReducer'
 
 function Note({ note, toggleImportant }) {
+  const { id, content, important } = note
   return (
-    <li key={note.id} onClick={() => toggleImportant(note.id)}>
-      {note.content}
-      <strong>{note.important ? 'important' : 'not important'}</strong>
+    <li key={id} onClick={() => toggleImportant({ id, important })}>
+      {content}
+      <strong>{important ? 'important' : 'not important'}</strong>
     </li>
   )
 }
@@ -22,11 +23,12 @@ function Notes({ notes, toggleImportant }) {
 }
 
 export default function NotesContainer() {
-  const notes = useSelector(state => state.notes)
+  const notes = useSelector((state) => state.notes)
   const dispatch = useDispatch()
 
-  const toggleImportant = (id) => {
-    dispatch(toggleImportantId(id))
+  // TODO: Update note
+  const toggleImportant = async ({ id, important }) => {
+    dispatch(toggleImportantOf({ id, important }))
   }
   return <Notes notes={notes} toggleImportant={toggleImportant} />
 }
