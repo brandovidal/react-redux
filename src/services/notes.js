@@ -7,8 +7,13 @@ export const getAll = async () => {
   return res.data
 }
 
-export const createNew = async (content) => {
+export const createNewNote = async (content) => {
   const note = { content, importanat: false }
   const response = await axios.post(baseUrl, note)
+  return response.data
+}
+
+export const updateNote = async ({ id, important }) => {
+  const response = await axios.patch(`${baseUrl}/${id}`, { important: !important })
   return response.data
 }
